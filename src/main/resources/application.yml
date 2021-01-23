@@ -1,0 +1,5 @@
+#mongodb:
+#  database: task
+#  uri: mongodb://localhost:27017/task
+#  uri: mongodb://${DB_HOST}:27017/task
+#  test: ${DB_HOST}

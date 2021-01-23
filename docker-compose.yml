@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  app:
+    image: 'skodentsev/task:latest'
+    container_name: app
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  mongodb:
+    image: 'mongo:4.4.3'
+    container_name: db
+    environment:
+      - POSTGRES_USER=compose-postgres
+  - POSTGRES_PASSWORD=compose-postgres
