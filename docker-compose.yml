@@ -6,15 +6,15 @@ services:
     container_name: app
     depends_on:
       - mongodb
+    ports:
+    - 8090:8090
+    env_file:
+      - ./task.env
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
-      - SPRING_DATASOURCE_USERNAME=compose-postgres
-      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - DB_HOST=mongodb
 
   mongodb:
     image: 'mongo:4.4.3'
-    container_name: db
-    environment:
-      - POSTGRES_USER=compose-postgres
-  - POSTGRES_PASSWORD=compose-postgres
+    container_name: mongodb
+    ports:
+    - 27017:27017

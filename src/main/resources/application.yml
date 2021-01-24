@@ -1,5 +1,7 @@
-#mongodb:
-#  database: task
-#  uri: mongodb://localhost:27017/task
-#  uri: mongodb://${DB_HOST}:27017/task
-#  test: ${DB_HOST}
+application:
+  attempts: 5
+mongodb:
+  database: task
+  uri: mongodb://${DB_HOST}:27017/task
+server:
+  port: 8090

@@ -1,41 +1,31 @@
 package com.kodentsev.task.domain.service;
 
-import com.kodentsev.task.domain.exception.NotFoundException;
 import com.kodentsev.task.domain.dto.FullName;
+import com.kodentsev.task.domain.entity.Account;
 import com.kodentsev.task.domain.entity.User;
+import com.kodentsev.task.domain.exception.NoContentException;
 import com.kodentsev.task.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-//    private final UserRepository userRepository;
-    private final List<User> users = Arrays.asList(
-            User.builder().id("1").firstName("Aaa").lastName("Qqq").build(),
-            User.builder().id("2").firstName("Bbb").lastName("Ggg").build(),
-            User.builder().id("3").firstName("Ccc").lastName("Ddd").build(),
-            User.builder().id("4").firstName("Ddd").lastName("Eee").build()
-            );
+    private final UserRepository userRepository;
+    private final  AccountService accountService;
 
-    public User getUserById(String id) {
-//        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User #" + id + " is not exist."));
-
-        User user = users.get(Integer.parseInt(id));
-        if (user == null) {
-            throw new NotFoundException("User #" + id + " is not exist.");
-        }
-        return user;
+    public User getUser(String id) {
+        return userRepository.findById(id).orElseThrow(NoContentException::new);
     }
 
-    public List<User> getUsersByFirstNameAndLastName(String firstName, String lastName) {
-//        return userRepository.getUsersByFirstNameAndLastName(firstName, lastName);
-
-        return users;
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     public User createUser(FullName fullName) {
@@ -43,15 +33,25 @@ public class UserService {
                 .firstName(fullName.getFirstName())
                 .lastName(fullName.getLastName())
                 .build();
+        log.info("User " + user + " is created");
 
-//        return userRepository.save(user);
-
-        users.add(user);
-
-        return user;
+        return userRepository.save(user);
     }
 
     public void deleteUser(String userId) {
-//        userRepository.deleteById(userId);
+        userRepository.deleteById(userId);
+    }
+
+    public Account createAccount(String userId) {
+        getUser(userId);
+        return accountService.createAccount(userId);
+    }
+
+    public String getUserBalance(String userId) {
+        getUser(userId);
+        return accountService.getAccountsByUserId(userId).stream()
+                .map(Account::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .toString();
     }
 }

@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "mongodb")
-public class MongoProperties {
+@ConfigurationProperties(prefix = "application")
+public class ApplicationProperties {
 
-    private String database;
-    private String uri;
+    private String attempts;
 }
