@@ -8,8 +8,6 @@ services:
       - mongodb
     ports:
     - 8090:8090
-    env_file:
-      - ./task.env
     environment:
       - DB_HOST=mongodb
 
